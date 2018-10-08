@@ -19,7 +19,7 @@ for (icon of icons) {
       duplicateCard = { open: false, icon: icon, matched: false };
 
   cards.push(card, duplicateCard);
-}
+};
 
 /*
  * Display the cards on the page
@@ -41,8 +41,22 @@ function shuffle(array) {
   }
 
   return array;
-}
+};
 
+shuffle(cards);
+
+const fragment = document.createDocumentFragment(),
+      cardDeck = document.querySelector('.deck');
+
+for (card of cards) {
+    const cardElement = document.createElement('li');
+    cardElement.className = 'card';
+    cardElement.innerHTML = `<i class="fa ${card.icon}"></i>`;
+
+    fragment.appendChild(cardElement);
+};
+
+cardDeck.appendChild(fragment);
 
 /*
  * set up the event listener for a card. If a card is clicked:
