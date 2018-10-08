@@ -48,7 +48,7 @@ shuffle(cards);
 const fragment = document.createDocumentFragment(),
       cardDeck = document.querySelector('.deck');
 
-for (card of cards) {
+for (let card of cards) {
     const cardElement = document.createElement('li');
     cardElement.className = 'card';
     cardElement.innerHTML = `<i class="fa ${card.icon}"></i>`;
@@ -57,6 +57,14 @@ for (card of cards) {
 };
 
 cardDeck.appendChild(fragment);
+
+const cardElements = document.querySelectorAll('.card');
+
+for (let cardElement of cardElements) {
+  cardElement.addEventListener('click', function (event) {
+    cardElement.classList.toggle('open');
+  });
+}
 
 /*
  * set up the event listener for a card. If a card is clicked:
