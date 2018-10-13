@@ -10,15 +10,24 @@ const icons = [
   'fa-cube',
   'fa-anchor',
   'fa-leaf',
+  'fa-bicycle',
+  'fa-diamond',
+  'fa-paper-plane-o',
+  'fa-anchor',
+  'fa-bolt',
+  'fa-cube',
+  'fa-anchor',
+  'fa-leaf',
   'fa-bicycle'
 ];
 
-let cards = [];
-for (icon of icons) {
-  let card = { open: false, icon: icon, matched: false },
-      duplicateCard = { open: false, icon: icon, matched: false };
+let cards = [],
+    cardId = 0;
+for (let icon of icons) {
+  let card = { open: false, icon: icon, matched: false, id: cardId };
+  cardId++;
 
-  cards.push(card, duplicateCard);
+  cards.push(card);
 };
 
 /*
@@ -52,9 +61,10 @@ for (let card of cards) {
     const cardElement = document.createElement('li');
     cardElement.className = 'card';
     cardElement.innerHTML = `<i class="fa ${card.icon}"></i>`;
+    cardElement.id = card.id;
 
     fragment.appendChild(cardElement);
-};
+}
 
 cardDeck.appendChild(fragment);
 
