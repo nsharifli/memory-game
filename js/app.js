@@ -68,12 +68,53 @@ for (let card of cards) {
 
 cardDeck.appendChild(fragment);
 
+let clickCount = 0,
+    currentOpenCard = null;
+
 const cardElements = document.querySelectorAll('.card');
 
 for (let cardElement of cardElements) {
   cardElement.addEventListener('click', function (event) {
+    let cardObject = findCardBy(cardElement.id);
+    if (cardObject.matched || cardObject.open) return;
+    cardObject.open = true;
     cardElement.classList.toggle('open');
+    compareCards(cardObject);
+    setTimeout(updateCards, 1000);
   });
+}
+
+function compareCards(card) {
+  if (currentOpenCard == null) {
+    currentOpenCard = card;
+  } else {
+    if (cardsMatch(currentOpenCard, card)) {
+      currentOpenCard.matched = true;
+      card.matched = true;
+    } else {
+      currentOpenCard.open = false;
+      card.open = false;
+    }
+    currentOpenCard = null;
+  }
+}
+
+function cardsMatch(firstCard, secondCard) {
+  return firstCard.icon === secondCard.icon;
+}
+
+function findCardBy(id) {
+  let cardId = parseInt(id);
+
+  return cards.find( card =>  card.id == cardId);
+}
+
+function updateCards() {
+  for (let cardElement of cardElements) {
+    cardObject = findCardBy(cardElement.id);
+    cardElement.classList.toggle('open', cardObject.open);
+    cardElement.classList.toggle('match', cardObject.matched);
+  }
 }
 
 /*
