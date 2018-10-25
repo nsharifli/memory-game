@@ -30,6 +30,8 @@ for (let icon of icons) {
   cards.push(card);
 };
 
+let moves = 0;
+
 /*
  * Display the cards on the page
  *   - shuffle the list of cards using the provided "shuffle" method below
@@ -78,9 +80,11 @@ for (let cardElement of cardElements) {
   cardElement.addEventListener('click', function (event) {
     let cardObject = findCardBy(cardElement.id);
     if (cardObject.matched || cardObject.open) return;
+    moves++
     cardObject.open = true;
     cardElement.classList.toggle('open');
     compareCards(cardObject);
+    updateMovesCounter(moves);
     setTimeout(updateCards, 1000);
   });
 }
@@ -118,6 +122,12 @@ function updateCards() {
   }
 
   if (allCardsMatched()) { openWinningModal() };
+}
+
+function updateMovesCounter(moves) {
+  let movesCounterElement = document.querySelector('.moves');
+
+  movesCounterElement.innerText = moves;
 }
 
 function allCardsMatched() {
