@@ -58,13 +58,14 @@ const fragment = document.createDocumentFragment(),
       cardDeck = document.querySelector('.deck');
 
 for (let card of cards) {
-    const cardElement = document.createElement('li');
-    cardElement.className = 'card';
-    cardElement.innerHTML = `<i class="fa ${card.icon}"></i>`;
-    cardElement.id = card.id;
+  const cardElement = document.createElement('li');
+  cardElement.className = 'card';
+  cardElement.innerHTML = `<i class="fa ${card.icon}"></i>`;
+  cardElement.id = card.id;
 
-    fragment.appendChild(cardElement);
-}
+  fragment.appendChild(cardElement);
+}     
+
 
 cardDeck.appendChild(fragment);
 
@@ -115,6 +116,22 @@ function updateCards() {
     cardElement.classList.toggle('open', cardObject.open);
     cardElement.classList.toggle('match', cardObject.matched);
   }
+
+  if (allCardsMatched()) { openWinningModal() };
+}
+
+function allCardsMatched() {
+  return cards.every(isMatched);
+}
+
+function isMatched(card) {
+  return card.matched;
+}
+
+function openWinningModal() {
+  let modal = document.querySelector('#winning-modal');
+
+  modal.style.display = "block";
 }
 
 /*
