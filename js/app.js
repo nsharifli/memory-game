@@ -85,6 +85,7 @@ for (let cardElement of cardElements) {
     cardElement.classList.toggle('open');
     compareCards(cardObject);
     updateMovesCounter(moves);
+    updateStars(moves);
     setTimeout(updateCards, 1000);
   });
 }
@@ -128,6 +129,18 @@ function updateMovesCounter(moves) {
   let movesCounterElement = document.querySelector('.moves');
 
   movesCounterElement.innerText = moves;
+}
+
+function updateStars(moves) {
+  let starsElement = document.querySelector('.stars')
+
+  switch (moves) {
+    case 24:
+      starsElement.removeChild(starsElement.lastElementChild);
+      break;
+    case 32:
+      starsElement.removeChild(starsElement.lastElementChild);
+  }
 }
 
 function allCardsMatched() {
