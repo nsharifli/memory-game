@@ -157,6 +157,18 @@ function openWinningModal() {
   modal.style.display = "block";
 }
 
+function timer() {
+  let n = 5;
+
+  const intervalId = setInterval(() => { 
+    n -= 1;
+    console.log(n);
+    if (n < 1) {
+      clearInterval(intervalId);
+    }
+  }, 1000);
+}
+
 /*
  * set up the event listener for a card. If a card is clicked:
  *  - display the card's symbol (put this functionality in another function that you call from this one)
