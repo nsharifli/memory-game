@@ -161,13 +161,26 @@ function timer() {
   let n = 0;
 
   const intervalId = setInterval(() => { 
-    document.querySelector('.fa-hourglass').innerText = n;
+    document.querySelector('.fa-hourglass').innerText = formatTime(n);
     n += 1;
-    console.log(n);
     if (allCardsMatched()) {
       clearInterval(intervalId);
     }
   }, 1000);
+}
+
+function formatTime(seconds) {
+  let   min = Math.floor(seconds / 60),
+        sec = seconds % 60;
+
+  if (min < 10) {
+    min = `0${min}`
+  }
+  if (sec < 10) {
+    sec = `0${sec}`
+  }
+
+  return `${min}:${sec}`;
 }
 
 /*
