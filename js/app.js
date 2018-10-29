@@ -71,11 +71,11 @@ for (let card of cards) {
 
 cardDeck.appendChild(fragment);
 
-let clickCount = 0,
-    currentOpenCard = null;
+
+let currentOpenCard = null;
+timer();
 
 const cardElements = document.querySelectorAll('.card');
-
 for (let cardElement of cardElements) {
   cardElement.addEventListener('click', function (event) {
     let cardObject = findCardBy(cardElement.id);
@@ -158,12 +158,13 @@ function openWinningModal() {
 }
 
 function timer() {
-  let n = 5;
+  let n = 0;
 
   const intervalId = setInterval(() => { 
-    n -= 1;
+    document.querySelector('.fa-hourglass').innerText = n;
+    n += 1;
     console.log(n);
-    if (n < 1) {
+    if (allCardsMatched()) {
       clearInterval(intervalId);
     }
   }, 1000);

@@ -109,6 +109,10 @@ h1 {
     cursor: pointer;
 }
 
+.score-panel .timer {
+  cursor: pointer;
+}
+
 #winning-modal {
   display: none;
   position: fixed;
