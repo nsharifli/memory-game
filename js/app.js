@@ -73,7 +73,7 @@ cardDeck.appendChild(fragment);
 
 
 let currentOpenCard = null;
-timer();
+timerId = timer();
 
 const cardElements = document.querySelectorAll('.card');
 for (let cardElement of cardElements) {
@@ -89,6 +89,10 @@ for (let cardElement of cardElements) {
     setTimeout(updateCards, 1000);
   });
 }
+
+const restartButton = document.querySelector('.fa-repeat');
+
+restartButton.addEventListener("click", restartGame);
 
 function compareCards(card) {
   if (currentOpenCard == null) {
@@ -167,6 +171,8 @@ function timer() {
       clearInterval(intervalId);
     }
   }, 1000);
+
+  return intervalId;
 }
 
 function formatTime(seconds) {
@@ -181,6 +187,21 @@ function formatTime(seconds) {
   }
 
   return `${min}:${sec}`;
+}
+
+function restartGame() {
+  cards.forEach(function(card) {
+    card.open = false;
+    card.matched = false;
+  })
+
+  clearInterval(timerId);
+  timerId = timer();
+
+  moves = 0;
+  updateMovesCounter(moves);
+  updateStars(moves);
+  updateCards();
 }
 
 /*
