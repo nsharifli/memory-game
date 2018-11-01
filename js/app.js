@@ -13,31 +13,15 @@ const icons = [
   'fa-bicycle',
   'fa-diamond',
   'fa-paper-plane-o',
-  'fa-anchor',
   'fa-bolt',
   'fa-cube',
-  'fa-anchor',
   'fa-leaf',
-  'fa-bicycle'
+  'fa-bicycle',
+  'fa-bomb',
+  'fa-bomb'
 ];
 
-let cards = [],
-    cardId = 0;
-for (let icon of icons) {
-  let card = { open: false, icon: icon, matched: false, id: cardId };
-  cardId++;
-
-  cards.push(card);
-};
-
-let moves = 0;
-
-/*
- * Display the cards on the page
- *   - shuffle the list of cards using the provided "shuffle" method below
- *   - loop through each card and create its HTML
- *   - add each card's HTML to the page
- */
+let currentOpenCard = null;
 
 // Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
@@ -54,41 +38,69 @@ function shuffle(array) {
   return array;
 };
 
-shuffle(cards);
-
-const fragment = document.createDocumentFragment(),
+function createCardElements(cards) {
+  const fragment = document.createDocumentFragment(),
       cardDeck = document.querySelector('.deck');
 
-for (let card of cards) {
-  const cardElement = document.createElement('li');
-  cardElement.className = 'card';
-  cardElement.innerHTML = `<i class="fa ${card.icon}"></i>`;
-  cardElement.id = card.id;
+  cardDeck.innerHTML = null;
 
-  fragment.appendChild(cardElement);
-}     
+  for (let card of cards) {
+    const cardElement = document.createElement('li');
+    cardElement.className = 'card';
+    cardElement.innerHTML = `<i class="fa ${card.icon}"></i>`;
+    cardElement.id = card.id;
 
+    fragment.appendChild(cardElement);
+  }     
 
-cardDeck.appendChild(fragment);
-
-
-let currentOpenCard = null;
-timerId = timer();
-
-const cardElements = document.querySelectorAll('.card');
-for (let cardElement of cardElements) {
-  cardElement.addEventListener('click', function (event) {
-    let cardObject = findCardBy(cardElement.id);
-    if (cardObject.matched || cardObject.open) return;
-    moves++
-    cardObject.open = true;
-    cardElement.classList.toggle('open');
-    compareCards(cardObject);
-    updateMovesCounter(moves);
-    updateStars(moves);
-    setTimeout(updateCards, 1000);
-  });
+  cardDeck.appendChild(fragment);
 }
+
+function addClickHandlertoCardElements(cards, moves) {
+  const cardElements = document.querySelectorAll('.card');
+  for (let cardElement of cardElements) {
+    cardElement.addEventListener('click', function (event) {
+      let cardObject = findCardBy(cards, cardElement.id);
+      if (cardObject.matched || cardObject.open) return;
+
+      moves += 1;
+      cardObject.open = true;
+      cardElement.classList.toggle('open');
+      compareCards(cardObject);
+      updateMovesCounter(moves);
+      updateStars(moves);
+      setTimeout(updateCards, 1000, cardElements, cards);
+    });
+  }
+}
+
+function createCards(icons) {
+  let cards = [],
+      cardId = 0;
+  for (let icon of icons) {
+    let card = { open: false, icon: icon, matched: false, id: cardId };
+    cardId += 1;
+
+    cards.push(card);
+  }
+
+  return cards;
+};
+
+function startGame() {
+  let cards = createCards(icons);
+
+  shuffle(cards);
+
+  createCardElements(cards);
+
+  let timerId = timer(cards),
+      moves = 0;
+
+  addClickHandlertoCardElements(cards, moves);
+}
+
+startGame();
 
 const restartButton = document.querySelector('.fa-repeat');
 
@@ -113,20 +125,20 @@ function cardsMatch(firstCard, secondCard) {
   return firstCard.icon === secondCard.icon;
 }
 
-function findCardBy(id) {
+function findCardBy(cards, id) {
   let cardId = parseInt(id);
 
   return cards.find( card =>  card.id == cardId);
 }
 
-function updateCards() {
+function updateCards(cardElements, cards) {
   for (let cardElement of cardElements) {
-    cardObject = findCardBy(cardElement.id);
+    cardObject = findCardBy(cards, cardElement.id);
     cardElement.classList.toggle('open', cardObject.open);
     cardElement.classList.toggle('match', cardObject.matched);
   }
 
-  if (allCardsMatched()) { openWinningModal() };
+  if (allCardsMatched(cards)) { openWinningModal() };
 }
 
 function updateMovesCounter(moves) {
@@ -147,7 +159,7 @@ function updateStars(moves) {
   }
 }
 
-function allCardsMatched() {
+function allCardsMatched(cards) {
   return cards.every(isMatched);
 }
 
@@ -161,13 +173,13 @@ function openWinningModal() {
   modal.style.display = "block";
 }
 
-function timer() {
+function timer(cards) {
   let n = 0;
 
   const intervalId = setInterval(() => { 
     document.querySelector('.fa-hourglass').innerText = formatTime(n);
     n += 1;
-    if (allCardsMatched()) {
+    if (allCardsMatched(cards)) {
       clearInterval(intervalId);
     }
   }, 1000);
@@ -190,18 +202,7 @@ function formatTime(seconds) {
 }
 
 function restartGame() {
-  cards.forEach(function(card) {
-    card.open = false;
-    card.matched = false;
-  })
-
-  clearInterval(timerId);
-  timerId = timer();
-
-  moves = 0;
-  updateMovesCounter(moves);
-  updateStars(moves);
-  updateCards();
+  alert("RESTARTING");
 }
 
 /*
