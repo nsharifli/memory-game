@@ -1,4 +1,3 @@
-
 const icons = [
   'fa-diamond',
   'fa-paper-plane-o',
@@ -147,14 +146,17 @@ function updateMovesCounter() {
 }
 
 function updateStars() {
-  let starsElement = document.querySelector('.stars')
+  let starsElement = document.querySelector('.stars'),
+      finalStarsElement = document.querySelector('.final-stars')
 
   switch (gameState.moves) {
     case 24:
       starsElement.removeChild(starsElement.lastElementChild);
+      finalStarsElement.removeChild(finalStarsElement.lastElementChild);
       break;
     case 32:
       starsElement.removeChild(starsElement.lastElementChild);
+      finalStarsElement.removeChild(finalStarsElement.lastElementChild);
   }
 }
 
@@ -185,6 +187,7 @@ function timer(cards) {
     document.querySelector('.fa-hourglass').innerText = formatTime(n);
     n += 1;
     if (allCardsMatched(cards)) {
+      document.querySelector('.time-to-finish').innerText = formatTime(n-1);
       clearInterval(intervalId);
     }
   }, 1000);

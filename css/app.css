@@ -109,8 +109,13 @@ h1 {
     cursor: pointer;
 }
 
-.score-panel .timer {
-  cursor: pointer;
+.final-stars li {
+  list-style: none;
+  display: inline-block;
+}
+
+.final-stars {
+  padding-left: 0px;
 }
 
 #winning-modal {
