@@ -21,7 +21,7 @@ const icons = [
   'fa-bomb'
 ];
 
-let currentOpenCard = null;
+let gameState = { moves: 0, currentOpenCard: null, timerId: null }
 
 // Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
@@ -56,19 +56,19 @@ function createCardElements(cards) {
   cardDeck.appendChild(fragment);
 }
 
-function addClickHandlertoCardElements(cards, moves) {
+function addClickHandlertoCardElements(cards) {
   const cardElements = document.querySelectorAll('.card');
   for (let cardElement of cardElements) {
     cardElement.addEventListener('click', function (event) {
       let cardObject = findCardBy(cards, cardElement.id);
       if (cardObject.matched || cardObject.open) return;
 
-      moves += 1;
+      gameState.moves += 1;
       cardObject.open = true;
       cardElement.classList.toggle('open');
       compareCards(cardObject);
-      updateMovesCounter(moves);
-      updateStars(moves);
+      updateMovesCounter();
+      updateStars();
       setTimeout(updateCards, 1000, cardElements, cards);
     });
   }
@@ -94,10 +94,10 @@ function startGame() {
 
   createCardElements(cards);
 
-  let timerId = timer(cards),
-      moves = 0;
+  clearInterval(gameState.timerId);
+  gameState.timerId = timer(cards);
 
-  addClickHandlertoCardElements(cards, moves);
+  addClickHandlertoCardElements(cards);
 }
 
 startGame();
@@ -107,17 +107,17 @@ const restartButton = document.querySelector('.fa-repeat');
 restartButton.addEventListener("click", restartGame);
 
 function compareCards(card) {
-  if (currentOpenCard == null) {
-    currentOpenCard = card;
+  if (gameState.currentOpenCard == null) {
+    gameState.currentOpenCard = card;
   } else {
-    if (cardsMatch(currentOpenCard, card)) {
-      currentOpenCard.matched = true;
+    if (cardsMatch(gameState.currentOpenCard, card)) {
+      gameState.currentOpenCard.matched = true;
       card.matched = true;
     } else {
-      currentOpenCard.open = false;
+      gameState.currentOpenCard.open = false;
       card.open = false;
     }
-    currentOpenCard = null;
+    gameState.currentOpenCard = null;
   }
 }
 
@@ -141,16 +141,16 @@ function updateCards(cardElements, cards) {
   if (allCardsMatched(cards)) { openWinningModal() };
 }
 
-function updateMovesCounter(moves) {
+function updateMovesCounter() {
   let movesCounterElement = document.querySelector('.moves');
 
-  movesCounterElement.innerText = moves;
+  movesCounterElement.innerText = gameState.moves;
 }
 
-function updateStars(moves) {
+function updateStars() {
   let starsElement = document.querySelector('.stars')
 
-  switch (moves) {
+  switch (gameState.moves) {
     case 24:
       starsElement.removeChild(starsElement.lastElementChild);
       break;
