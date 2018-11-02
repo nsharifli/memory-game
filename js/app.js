@@ -19,6 +19,35 @@ const icons = [
 
 let gameState = { moves: 0, currentOpenCard: null, timerId: null }
 
+startGame();
+
+function startGame() {
+  let cards = createCards(icons);
+
+  shuffle(cards);
+
+  createCardElements(cards);
+
+  resetScoreCounter(cards);
+
+  addClickHandlerToCardElements(cards);
+  addEventListenerToRestartButton();
+  addEventListenerToPlayAgainButton();
+}
+
+function createCards(icons) {
+  let cards = [],
+      cardId = 0;
+  for (let icon of icons) {
+    let card = { open: false, icon: icon, matched: false, id: cardId };
+    cardId += 1;
+
+    cards.push(card);
+  }
+
+  return cards;
+}
+
 // Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
   var currentIndex = array.length, temporaryValue, randomIndex;
@@ -32,7 +61,7 @@ function shuffle(array) {
   }
 
   return array;
-};
+}
 
 function createCardElements(cards) {
   const fragment = document.createDocumentFragment(),
@@ -47,64 +76,43 @@ function createCardElements(cards) {
     cardElement.id = card.id;
 
     fragment.appendChild(cardElement);
-  }     
+  }
 
   cardDeck.appendChild(fragment);
 }
 
-function addClickHandlertoCardElements(cards) {
-  const cardElements = document.querySelectorAll('.card');
-  for (let cardElement of cardElements) {
-    cardElement.addEventListener('click', function (event) {
-      let cardObject = findCardBy(cards, cardElement.id);
-      if (cardObject.matched || cardObject.open) return;
-
-      gameState.moves += 1;
-      cardObject.open = true;
-      cardElement.classList.toggle('open');
-      compareCards(cardObject);
-      updateMovesCounter();
-      updateStars();
-      setTimeout(updateCards, 1000, cardElements, cards);
-    });
-  }
-}
-
-function createCards(icons) {
-  let cards = [],
-      cardId = 0;
-  for (let icon of icons) {
-    let card = { open: false, icon: icon, matched: false, id: cardId };
-    cardId += 1;
-
-    cards.push(card);
-  }
-
-  return cards;
-};
-
-function startGame() {
-  let cards = createCards(icons);
-
-  shuffle(cards);
-
-  createCardElements(cards);
-
+function resetScoreCounter(cards) {
   gameState.moves = 0;
   clearInterval(gameState.timerId);
   gameState.timerId = timer(cards);
 
   updateMovesCounter(gameState.moves);
   updateStars(gameState.moves);
-
-  addClickHandlertoCardElements(cards);
-  addEventListenerToRestartButton();
-  addEventListenerToPlayAgainButton();
 }
 
-startGame();
+function addClickHandlerToCardElements(cards) {
+  const cardElements = document.querySelectorAll('.card');
 
-function compareCards(card) {
+  // For each card element add a click event listener
+  for (let cardElement of cardElements) {
+    cardElement.addEventListener('click', function (event) {
+      let cardObject = findCardBy(cards, cardElement.id);
+      // If card is already matched or open, then return
+      if (cardObject.matched || cardObject.open) return;
+
+      gameState.moves += 1;
+      cardObject.open = true;
+      cardElement.classList.toggle('open');
+      compareToCurrentlyOpenCard(cardObject);
+      updateMovesCounter();
+      updateStars();
+      // For incorrect match we need second card to open and then close, so I added 1 second interval for that
+      setTimeout(updateCards, 1000, cardElements, cards);
+    });
+  }
+}
+
+function compareToCurrentlyOpenCard(card) {
   if (gameState.currentOpenCard == null) {
     gameState.currentOpenCard = card;
   } else {
@@ -136,7 +144,7 @@ function updateCards(cardElements, cards) {
     cardElement.classList.toggle('match', cardObject.matched);
   }
 
-  if (allCardsMatched(cards)) { openWinningModal() };
+  if (allCardsMatched(cards)) { openWinningModal(); }
 }
 
 function updateMovesCounter() {
@@ -147,7 +155,7 @@ function updateMovesCounter() {
 
 function updateStars() {
   let starsElement = document.querySelector('.stars'),
-      finalStarsElement = document.querySelector('.final-stars')
+      finalStarsElement = document.querySelector('.final-stars');
 
   switch (gameState.moves) {
     case 24:
@@ -183,7 +191,7 @@ function closeWinningModal() {
 function timer(cards) {
   let n = 0;
 
-  const intervalId = setInterval(() => { 
+  const intervalId = setInterval(() => {
     document.querySelector('.playing-time').innerText = formatTime(n);
     n += 1;
     if (allCardsMatched(cards)) {
@@ -200,10 +208,10 @@ function formatTime(seconds) {
         sec = seconds % 60;
 
   if (min < 10) {
-    min = `0${min}`
+    min = `0${min}`;
   }
   if (sec < 10) {
-    sec = `0${sec}`
+    sec = `0${sec}`;
   }
 
   return `${min}:${sec}`;
