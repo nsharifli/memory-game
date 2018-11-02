@@ -94,6 +94,7 @@ function startGame() {
 
   createCardElements(cards);
 
+  gameState.moves = 0;
   clearInterval(gameState.timerId);
   gameState.timerId = timer(cards);
 
@@ -202,7 +203,7 @@ function formatTime(seconds) {
 }
 
 function restartGame() {
-  alert("RESTARTING");
+  startGame();
 }
 
 /*
