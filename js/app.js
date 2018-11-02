@@ -184,7 +184,7 @@ function timer(cards) {
   let n = 0;
 
   const intervalId = setInterval(() => { 
-    document.querySelector('.fa-hourglass').innerText = formatTime(n);
+    document.querySelector('.playing-time').innerText = formatTime(n);
     n += 1;
     if (allCardsMatched(cards)) {
       document.querySelector('.time-to-finish').innerText = formatTime(n-1);

@@ -118,6 +118,11 @@ h1 {
   padding-left: 0px;
 }
 
+.timer {
+  margin-left: 4em;
+  display: inline-block;
+}
+
 #winning-modal {
   display: none;
   position: fixed;
