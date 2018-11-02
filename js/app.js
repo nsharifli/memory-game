@@ -29,6 +29,7 @@ function startGame() {
   createCardElements(cards);
 
   resetScoreCounter(cards);
+  gameState.currentOpenCard = null;
 
   addClickHandlerToCardElements(cards);
   addEventListenerToRestartButton();
