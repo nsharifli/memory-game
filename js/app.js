@@ -99,13 +99,11 @@ function startGame() {
   updateStars(gameState.moves);
 
   addClickHandlertoCardElements(cards);
+  addEventListenerToRestartButton();
+  addEventListenerToPlayAgainButton();
 }
 
 startGame();
-
-const restartButton = document.querySelector('.fa-repeat');
-
-restartButton.addEventListener("click", restartGame);
 
 function compareCards(card) {
   if (gameState.currentOpenCard == null) {
@@ -174,6 +172,12 @@ function openWinningModal() {
   modal.style.display = "block";
 }
 
+function closeWinningModal() {
+  let modal = document.querySelector('#winning-modal');
+
+  modal.style.display = "none";
+}
+
 function timer(cards) {
   let n = 0;
 
@@ -202,6 +206,18 @@ function formatTime(seconds) {
   return `${min}:${sec}`;
 }
 
-function restartGame() {
+function addEventListenerToRestartButton() {
+  const restartButton = document.querySelector('.fa-repeat');
+  restartButton.addEventListener("click", startGame);
+}
+
+function addEventListenerToPlayAgainButton() {
+  const playAgainButton = document.querySelector('.play-again-button');
+  playAgainButton.addEventListener("click", playAgain);
+}
+
+function playAgain() {
+  closeWinningModal();
+
   startGame();
 }
