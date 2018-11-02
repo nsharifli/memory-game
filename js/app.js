@@ -98,6 +98,9 @@ function startGame() {
   clearInterval(gameState.timerId);
   gameState.timerId = timer(cards);
 
+  updateMovesCounter(gameState.moves);
+  updateStars(gameState.moves);
+
   addClickHandlertoCardElements(cards);
 }
 
