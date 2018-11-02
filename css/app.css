@@ -76,9 +76,16 @@ h1 {
     font-size: 33px;
 }
 
+/* Animation for correct matching */
 @keyframes correct-match {
   0%   {transform: scaleX(1);}
   50%  {transform: scaleX(0.6);} 
+  100% {transform: scaleX(1);}
+}
+
+@-webkit-keyframes correct-match {
+  0%   {transform: scaleX(1);}
+  50%  {transform: scaleX(0.6);}
   100% {transform: scaleX(1);}
 }
 
@@ -89,6 +96,9 @@ h1 {
     animation-name: correct-match;
     animation-duration: 0.5s;
     animation-delay: 0s;
+    -webkit-animation-name: correct-match;
+    -webkit-animation-duration: 0.5s;
+    -webkit-animation-delay: 0s;
 }
 
 /*
